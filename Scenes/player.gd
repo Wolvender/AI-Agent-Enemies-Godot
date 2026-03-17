@@ -2,9 +2,9 @@ extends CharacterBody3D
 
 const SPEED = 5.0
 const RUN_SPEED = 8.0
-const JUMP_VELOCITY = 4.5
-const SENSITIVITY = 0.01
+const JUMP_VELOCITY = 5
 
+const SENSITIVITY = 0.01
 @onready var mount: Node3D = $Mount
 @onready var animation_player: AnimationPlayer = $Visuals/mixamo_base/AnimationPlayer
 
@@ -57,13 +57,14 @@ func _physics_process(delta: float) -> void:
 
 func update_animations(direction: Vector3, current_speed: float) -> void:
 	if not is_on_floor():
-		# Optional: Add jump animation if available (Jump.res exists in Assets)
+		animation_player.play("JumpingInPlace", 0.2)
 		return
 	
 	if direction != Vector3.ZERO:
 		if current_speed == RUN_SPEED:
-			animation_player.play("running")
+			animation_player.play("running", 0.3)
 		else:
-			animation_player.play("walking")
+			animation_player.play("walking", 0.3)
 	else:
-		animation_player.play("idle")
+		# Smoothing the stop: 0.5s blend creates a very natural wind-down
+		animation_player.play("idle", 0.5)

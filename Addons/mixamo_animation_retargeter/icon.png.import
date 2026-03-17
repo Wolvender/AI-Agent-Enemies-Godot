@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cp3af7c7oqt4i"
-path="res://.godot/imported/icon.png-f9973353c2382c14f2344329ea63d892.ctex"
+uid="uid://b2441obruoogx"
+path="res://.godot/imported/icon.png-1efe102477458fd1aa9f61b8da63223f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Addons/Godot-Mixamo-Animation-Retargeter-e04f01ea46685c6f6a91904c853041753026b06f/addons/mixamo_animation_retargeter/icon.png"
-dest_files=["res://.godot/imported/icon.png-f9973353c2382c14f2344329ea63d892.ctex"]
+source_file="res://Addons/mixamo_animation_retargeter/icon.png"
+dest_files=["res://.godot/imported/icon.png-1efe102477458fd1aa9f61b8da63223f.ctex"]
 
 [params]
 

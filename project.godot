@@ -19,6 +19,10 @@ config/icon="res://icon.svg"
 
 project/assembly_name="AI Agent Enemies"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/mixamo_animation_retargeter/plugin.cfg")
+
 [input]
 
 move_forward={

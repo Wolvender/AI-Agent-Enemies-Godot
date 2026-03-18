@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://dsyqijycsws21"
-path="res://.godot/imported/Fast Run (3).fbx-7888803d7db4c989652f434a7cf72220.scn"
+uid="uid://cxutktvdidxao"
+path="res://.godot/imported/Great Sword Idle.fbx-215052534f024a7b76dea42bf222b355.scn"
 
 [deps]
 
-source_file="res://Assets/Animations/Animations Try 3/Fast Run (3).fbx"
-dest_files=["res://.godot/imported/Fast Run (3).fbx-7888803d7db4c989652f434a7cf72220.scn"]
+source_file="res://Assets/Animations/Animations Try 3/Great Sword Idle.fbx"
+dest_files=["res://.godot/imported/Great Sword Idle.fbx-215052534f024a7b76dea42bf222b355.scn"]
 
 [params]
 

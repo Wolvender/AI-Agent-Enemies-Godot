@@ -10,7 +10,7 @@ extends CharacterBody3D
 @export var max_pitch := 60.0
 
 @onready var camera_mount: Node3D = $CameraMount
-@onready var animation_player: AnimationPlayer = $Visual/allAnims/AnimationPlayer
+@onready var animation_player: AnimationPlayer = $Visual/Player/AnimationPlayer
 
 var jump_count := 0
 var jump_timer := 0.0
@@ -53,7 +53,7 @@ func _physics_process(delta: float) -> void:
 		elif jump_count == 1 and jump_timer > 0:
 			velocity.y = double_jump_velocity
 			jump_count = 2
-			play_animation("mixamo_com_003")
+			play_animation("mixamo_com_025")
 
 	# Get WASD input (using default Godot actions)
 	var input_dir := Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
@@ -85,22 +85,22 @@ func update_animations(direction: Vector3, current_speed: float) -> void:
 			
 		if velocity.y > 0:
 			# mixamo_com_005 is jumping
-			play_animation("mixamo_com_005")
+			play_animation("mixamo_com_027")
 		else:
 			# mixamo_com is falling
-			play_animation("mixamo_com")
+			play_animation("mixamo_com_021")
 		return
 
 	if direction:
 		if current_speed == run_speed:
 			# mixamo_com_001 is running
-			play_animation("mixamo_com_001")
+			play_animation("mixamo_com_024")
 		else:
 			# mixamo_com_007 is walking
-			play_animation("mixamo_com_007")
+			play_animation("mixamo_com_023")
 	else:
 		# mixamo_com_002 is idle
-		play_animation("mixamo_com_002")
+		play_animation("mixamo_com_022")
 
 func play_animation(anim_name: String) -> void:
 	if animation_player.current_animation != anim_name:

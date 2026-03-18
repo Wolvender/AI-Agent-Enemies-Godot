@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://n0odtbmsva34"
-path="res://.godot/imported/Happy Idle (4).fbx-1b235a7a7b943f28cf1a8c8d8c9509b7.scn"
+uid="uid://kuc84kwcl3yg"
+path="res://.godot/imported/Walking (4).fbx-3450b9c80d5bd37ca4939df94e56b6b9.scn"
 
 [deps]
 
-source_file="res://Assets/Animations/Animations Try 3/Happy Idle (4).fbx"
-dest_files=["res://.godot/imported/Happy Idle (4).fbx-1b235a7a7b943f28cf1a8c8d8c9509b7.scn"]
+source_file="res://Assets/Animations/PlayerAnimations/Walking (4).fbx"
+dest_files=["res://.godot/imported/Walking (4).fbx-3450b9c80d5bd37ca4939df94e56b6b9.scn"]
 
 [params]
 

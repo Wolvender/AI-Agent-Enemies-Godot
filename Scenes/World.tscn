@@ -1,10 +1,14 @@
 [gd_scene format=3 uid="uid://ci6asmjsaonpl"]
 
-[ext_resource type="PackedScene" uid="uid://dyimp0l3k6aom" path="res://Scenes/Player.tscn" id="1_5cjrv"]
 [ext_resource type="Texture2D" uid="uid://dko2pc0uq6pwf" path="res://Assets/third_person_controller_assets-main/textures/grids/Green/texture_01.png" id="1_j0p05"]
+[ext_resource type="Texture2D" uid="uid://dgfc87vfilfo8" path="res://Assets/third_person_controller_assets-main/textures/grids/Purple/texture_03.png" id="2_5nsto"]
+[ext_resource type="PackedScene" uid="uid://43rbbsfjte2q" path="res://Scenes/Player2.tscn" id="2_j0p05"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5nsto"]
 albedo_texture = ExtResource("1_j0p05")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gjpho"]
+albedo_texture = ExtResource("2_5nsto")
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_cmany"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -24,11 +28,6 @@ glow_enabled = true
 
 [node name="Map" type="Node3D" parent="." unique_id=1434279858]
 
-[node name="CSGBox3D" type="CSGBox3D" parent="Map" unique_id=446797940]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
-use_collision = true
-size = Vector3(1000, 1, 1000)
-
 [node name="CSGBox3D2" type="CSGBox3D" parent="Map" unique_id=1963439128]
 transform = Transform3D(0.9975027, 0, 0, 0, 0.9975027, 0, 0, 0, 0.9975027, -1.021243, 0.19676816, -6.2918973)
 material_override = SubResource("StandardMaterial3D_5nsto")
@@ -39,6 +38,11 @@ transform = Transform3D(1.0087111, 0, 0, 0, 2.674717, 0, 0, 0, 1.0087111, 1.2391
 material_override = SubResource("StandardMaterial3D_5nsto")
 use_collision = true
 
+[node name="CSGBox3D" type="CSGBox3D" parent="Map" unique_id=268542960]
+transform = Transform3D(3435.0337, 0, 0, 0, 1, 0, 0, 0, 451.80893, 0, -0.5, 0)
+material_override = SubResource("StandardMaterial3D_gjpho")
+use_collision = true
+
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1267915373]
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
 shadow_enabled = true
@@ -47,4 +51,4 @@ directional_shadow_mode = 0
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1754158145]
 environment = SubResource("Environment_2dftf")
 
-[node name="Player" parent="." unique_id=1530028863 instance=ExtResource("1_5cjrv")]
+[node name="Player2" parent="." unique_id=697178170 instance=ExtResource("2_j0p05")]

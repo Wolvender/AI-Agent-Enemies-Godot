@@ -1,0 +1,51 @@
+[remap]
+
+importer="scene"
+importer_version=1
+type="PackedScene"
+uid="uid://cn2o2pfcmcsvd"
+path="res://.godot/imported/astronaut_character_stylized_rigged_free_model.glb-b1623b937b5b94415dba6d363d3229f5.scn"
+
+[deps]
+
+source_file="res://Assets/Astronout/astronaut_character_stylized_rigged_free_model.glb"
+dest_files=["res://.godot/imported/astronaut_character_stylized_rigged_free_model.glb-b1623b937b5b94415dba6d363d3229f5.scn"]
+
+[params]
+
+nodes/root_type=""
+nodes/root_name=""
+nodes/root_script=null
+nodes/apply_root_scale=true
+nodes/root_scale=1.0
+nodes/import_as_skeleton_bones=false
+nodes/use_name_suffixes=true
+nodes/use_node_type_suffixes=true
+meshes/ensure_tangents=true
+meshes/generate_lods=true
+meshes/create_shadow_meshes=true
+meshes/light_baking=1
+meshes/lightmap_texel_size=0.2
+meshes/force_disable_compression=false
+skins/use_named_skins=true
+animation/import=true
+animation/fps=30
+animation/trimming=false
+animation/remove_immutable_tracks=true
+animation/import_rest_as_RESET=false
+import_script/path=""
+materials/extract=0
+materials/extract_format=0
+materials/extract_path=""
+_subresources={
+"nodes": {
+"PATH:Sketchfab_model/1dc43f4f5b5643339b4cc09a4ea1212e_fbx/Object_2/RootNode/Object_4/Skeleton3D": {
+"rest_pose/selected_animation": "mixamo_com",
+"retarget/bone_map": Object(BoneMap,"resource_local_to_scene":false,"resource_name":"","profile":Object(SkeletonProfileHumanoid,"resource_local_to_scene":false,"resource_name":"","root_bone":&"Root","scale_base_bone":&"Hips","group_size":4,"bone_size":56,"script":null)
+,"bonemap":null,"bone_map/Root":&"_rootJoint","bone_map/Hips":&"mixamorig_Hips_01","bone_map/Spine":&"mixamorig_Spine_02","bone_map/Chest":&"mixamorig_Spine1_03","bone_map/UpperChest":&"mixamorig_Spine2_04","bone_map/Neck":&"mixamorig_Neck_00","bone_map/Head":&"mixamorig_Head_05","bone_map/LeftEye":&"","bone_map/RightEye":&"","bone_map/Jaw":&"","bone_map/LeftShoulder":&"mixamorig_LeftShoulder_07","bone_map/LeftUpperArm":&"mixamorig_LeftArm_08","bone_map/LeftLowerArm":&"mixamorig_LeftForeArm_09","bone_map/LeftHand":&"mixamorig_LeftHand_010","bone_map/LeftThumbMetacarpal":&"mixamorig_LeftHandThumb1_011","bone_map/LeftThumbProximal":&"mixamorig_LeftHandThumb2_012","bone_map/LeftThumbDistal":&"mixamorig_LeftHandThumb3_013","bone_map/LeftIndexProximal":&"mixamorig_LeftHandIndex1_015","bone_map/LeftIndexIntermediate":&"mixamorig_LeftHandIndex2_016","bone_map/LeftIndexDistal":&"mixamorig_LeftHandIndex3_017","bone_map/LeftMiddleProximal":&"mixamorig_LeftHandMiddle1_019","bone_map/LeftMiddleIntermediate":&"mixamorig_LeftHandMiddle2_020","bone_map/LeftMiddleDistal":&"mixamorig_LeftHandMiddle3_021","bone_map/LeftRingProximal":&"mixamorig_LeftHandRing1_023","bone_map/LeftRingIntermediate":&"mixamorig_LeftHandRing2_024","bone_map/LeftRingDistal":&"mixamorig_LeftHandRing3_025","bone_map/LeftLittleProximal":&"","bone_map/LeftLittleIntermediate":&"","bone_map/LeftLittleDistal":&"","bone_map/RightShoulder":&"mixamorig_RightShoulder_027","bone_map/RightUpperArm":&"mixamorig_RightArm_028","bone_map/RightLowerArm":&"mixamorig_RightForeArm_029","bone_map/RightHand":&"mixamorig_RightHand_030","bone_map/RightThumbMetacarpal":&"mixamorig_RightHandThumb1_031","bone_map/RightThumbProximal":&"mixamorig_RightHandThumb2_032","bone_map/RightThumbDistal":&"mixamorig_RightHandThumb3_033","bone_map/RightIndexProximal":&"mixamorig_RightHandIndex1_035","bone_map/RightIndexIntermediate":&"mixamorig_RightHandIndex2_036","bone_map/RightIndexDistal":&"mixamorig_RightHandIndex3_037","bone_map/RightMiddleProximal":&"mixamorig_RightHandMiddle1_039","bone_map/RightMiddleIntermediate":&"mixamorig_RightHandMiddle2_040","bone_map/RightMiddleDistal":&"mixamorig_RightHandMiddle3_041","bone_map/RightRingProximal":&"mixamorig_RightHandRing1_043","bone_map/RightRingIntermediate":&"mixamorig_RightHandRing2_044","bone_map/RightRingDistal":&"mixamorig_RightHandRing3_045","bone_map/RightLittleProximal":&"","bone_map/RightLittleIntermediate":&"","bone_map/RightLittleDistal":&"","bone_map/LeftUpperLeg":&"mixamorig_LeftUpLeg_047","bone_map/LeftLowerLeg":&"mixamorig_LeftLeg_048","bone_map/LeftFoot":&"mixamorig_LeftFoot_049","bone_map/LeftToes":&"mixamorig_LeftToeBase_050","bone_map/RightUpperLeg":&"mixamorig_RightUpLeg_052","bone_map/RightLowerLeg":&"mixamorig_RightLeg_053","bone_map/RightFoot":&"mixamorig_RightFoot_054","bone_map/RightToes":&"mixamorig_RightToeBase_055","script":null)
+
+}
+}
+}
+gltf/naming_version=2
+gltf/embedded_image_handling=1

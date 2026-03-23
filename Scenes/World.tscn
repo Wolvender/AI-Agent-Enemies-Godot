@@ -1,14 +1,15 @@
 [gd_scene format=3 uid="uid://ci6asmjsaonpl"]
 
 [ext_resource type="Texture2D" uid="uid://dko2pc0uq6pwf" path="res://Assets/third_person_controller_assets-main/textures/grids/Green/texture_01.png" id="1_j0p05"]
-[ext_resource type="Texture2D" uid="uid://dgfc87vfilfo8" path="res://Assets/third_person_controller_assets-main/textures/grids/Purple/texture_03.png" id="2_5nsto"]
 [ext_resource type="PackedScene" uid="uid://43rbbsfjte2q" path="res://Scenes/Player2.tscn" id="2_j0p05"]
+[ext_resource type="PackedScene" uid="uid://dymyr3fiwrw31" path="res://Scenes/Enemy1.tscn" id="4_gjpho"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5nsto"]
 albedo_texture = ExtResource("1_j0p05")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gjpho"]
-albedo_texture = ExtResource("2_5nsto")
+[sub_resource type="NavigationMesh" id="NavigationMesh_gjpho"]
+vertices = PackedVector3Array(-129.10736, 0.46625367, -156.35187, -129.10736, 0.46625367, 156.39813, 129.14264, 0.46625367, 156.39813, 129.14264, 0.46625367, -156.35187)
+polygons = [PackedInt32Array(3, 2, 0), PackedInt32Array(0, 2, 1)]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_cmany"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -43,14 +44,17 @@ transform = Transform3D(2.3505433, 0, 0, 0, 2.704452, 0, 0, 0, 1.6480832, 1.2391
 material_override = SubResource("StandardMaterial3D_5nsto")
 use_collision = true
 
-[node name="CSGBox3D" type="CSGBox3D" parent="Map" unique_id=268542960]
-transform = Transform3D(3435.0337, 0, 0, 0, 1, 0, 0, 0, 451.80893, 0, -0.5, 0)
-material_override = SubResource("StandardMaterial3D_gjpho")
-use_collision = true
-
 [node name="CSGBox3D4" type="CSGBox3D" parent="Map" unique_id=1176428318]
 transform = Transform3D(4.747526, 0, 0, 0, 7.233649, 0, 0, 0, 2.8057477, 5.7385964, 0.9444091, 0.7007599)
 material_override = SubResource("StandardMaterial3D_5nsto")
+use_collision = true
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Map" unique_id=1748238619]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01385133, 0)
+navigation_mesh = SubResource("NavigationMesh_gjpho")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Map/NavigationRegion3D" unique_id=658198161]
+transform = Transform3D(259.21472, 0, 0, 0, -0.067492664, 0, 0, 0, 313.70374, 0, 0, 0)
 use_collision = true
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1267915373]
@@ -61,4 +65,7 @@ directional_shadow_mode = 0
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1754158145]
 environment = SubResource("Environment_2dftf")
 
-[node name="Player2" parent="." unique_id=697178170 instance=ExtResource("2_j0p05")]
+[node name="Player2" parent="." unique_id=697178170 groups=["player"] instance=ExtResource("2_j0p05")]
+
+[node name="Enemy1" parent="." unique_id=2053103274 instance=ExtResource("4_gjpho")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.4753766, 0, 0)

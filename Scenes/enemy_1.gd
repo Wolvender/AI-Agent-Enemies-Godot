@@ -21,7 +21,7 @@ const ANIM_ATTACK = "mixamo_com_010"
 const ANIM_HIT    = "mixamo_com"
 const ANIM_DEAD   = "mixamo_com_006"
 
-const GROQ_API_KEY = preload("res://Scripts/Api_KEYS.gd").GROQ_API_KEY
+const GROQ_API_KEY        = "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"
 const GROQ_URL            = "https://api.groq.com/openai/v1/chat/completions"
 const THOUGHT_DISPLAY_TIME := 4.0
 const MAX_MEMORY_ENTRIES  = 10
@@ -37,7 +37,7 @@ var can_see_player := false
 var time_in_state := 0.0
 
 var ai_timer := 0.0
-var ai_cooldown := 5
+var ai_cooldown := 6
 var waiting_for_ai := false
 
 var patrol_points: Array = []
@@ -374,9 +374,9 @@ Example: STRAFE|circling you like a shark. a very tired shark.
 	   stuck_info, attack_range, chase_range]
 
 	var body = JSON.stringify({
-		"model": "llama-3.3-70b-versatile",
+		"model": "allam-2-7b",
 		"messages": [{"role": "user", "content": prompt}],
-		"max_tokens": 40,
+		"max_tokens": 10,
 		"temperature": 1.2
 	})
 

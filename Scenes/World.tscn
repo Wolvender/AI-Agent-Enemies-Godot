@@ -3,6 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://dko2pc0uq6pwf" path="res://Assets/third_person_controller_assets-main/textures/grids/Green/texture_01.png" id="1_j0p05"]
 [ext_resource type="PackedScene" uid="uid://43rbbsfjte2q" path="res://Scenes/Player2.tscn" id="2_j0p05"]
 [ext_resource type="PackedScene" uid="uid://dymyr3fiwrw31" path="res://Scenes/Enemy1.tscn" id="4_gjpho"]
+[ext_resource type="MeshLibrary" uid="uid://dj0db6c27vl76" path="res://TilesMap.res" id="4_p70al"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5nsto"]
 albedo_texture = ExtResource("1_j0p05")
@@ -69,3 +70,7 @@ environment = SubResource("Environment_2dftf")
 
 [node name="Enemy1" parent="." unique_id=2053103274 instance=ExtResource("4_gjpho")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.4753766, 0, 0)
+
+[node name="GridMap" type="GridMap" parent="." unique_id=1392710334]
+mesh_library = ExtResource("4_p70al")
+cell_size = Vector3(0.5, 0.5, 0.5)

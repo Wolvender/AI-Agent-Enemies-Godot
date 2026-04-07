@@ -135,21 +135,14 @@ func die() -> void:
 		return
 	is_dead = true
 	velocity = Vector3.ZERO
-	print("Player died!")
-	
-	# Freeze player completely
-	set_physics_process(false)
 	set_process_input(false)
-	
-	# Optional: play death animation here if you have one
-	# animation_player.play("your_death_animation")
-	
-	# Notify game loop
+	animation_player.speed_scale = 1.0
+	animation_player.play("mixamo_com_006", 0.2)
 	player_died.emit()
-	
-	# Quick level restart (change or remove this if you want a Game Over screen)
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	await get_tree().create_timer(2.0).timeout
-	get_tree().reload_current_scene()
+	get_tree().change_scene_to_file("res://Scenes/DeathScreen.tscn")
+
 
 # ====================== PHYSICS PROCESS ======================
 func _physics_process(delta: float) -> void:

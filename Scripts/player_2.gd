@@ -13,9 +13,11 @@ extends CharacterBody3D
 @export var max_health: float = 100.0
 var current_health: float = 100.0
 var is_dead: bool = false
+var kill_count: int = 0
 
 # Signal so your main scene / game manager can react
 signal player_died
+signal kill_count_changed(new_count: int)
 
 # === Attack Settings ===
 @export var attack_damage := 25.0
@@ -28,6 +30,8 @@ signal player_died
 
 # Health bar (HUD)
 @onready var health_bar: TextureProgressBar = $SubViewport/TextureProgressBar
+@onready var kill_label: Label = get_node_or_null("HUD/KillCount")
+@onready var wave_label: Label = get_node_or_null("HUD/WaveCount")
 
 var jump_count := 0
 var jump_timer := 0.0
@@ -65,7 +69,24 @@ func _ready() -> void:
 		print("✅ Player health bar found and ready!")
 	else:
 		print("❌ ERROR: Player health bar NOT FOUND! Check node path $CanvasLayer/HealthBar")
+
+	if kill_label:
+		kill_label.text = "Kills: " + str(kill_count)
+		print("✅ Kill count label found and ready!")
+	else:
+		print("❌ ERROR: Kill count label NOT FOUND! Check node path $HUD/KillCount")
+
+	if wave_label:
+		wave_label.text = "Wave: 1"
+		print("✅ Wave label found and ready!")
+
+func update_wave(wave: int) -> void:
+	if wave_label:
+		wave_label.text = "Wave: " + str(wave)
+	print("Wave updated to: ", wave)
+
 func _on_animation_finished(anim_name: String) -> void:
+
 	if anim_name == "mixamo_com_017":
 		double_jump_anim_playing = false
 	if anim_name == "mixamo_com_010":
@@ -96,8 +117,10 @@ func _on_sword_hit(body: Node) -> void:
 	var target = body if body.has_method("take_damage") else body.get_parent()
 	if target.has_method("take_damage"):
 		_hit_bodies.append(body)
+		print("Attempting to deal ", attack_damage, " damage to ", target.name)
 		target.take_damage(attack_damage)
-		print("Hit ", target.name)
+	else:
+		print("Hit something that cannot take damage: ", body.name)
 
 func try_attack() -> void:
 	if is_attacking or attack_timer > 0.0 or not is_on_floor():
@@ -129,6 +152,26 @@ func take_damage(amount: float) -> void:
 	
 	if current_health <= 1:
 		die()
+
+func add_kill() -> void:
+	kill_count += 1
+	kill_count_changed.emit(kill_count)
+	
+	# Scaling damage: Every 5 kills, add 10 more attack damage
+	if kill_count > 0 and kill_count % 5 == 0:
+		attack_damage += 10.0
+		print("🔥 Damage Up! New attack damage: ", attack_damage)
+		if kill_label:
+			# Temporary visual feedback for damage up
+			var original_text = "Kills: " + str(kill_count)
+			kill_label.text = "DMG UP! " + str(attack_damage)
+			await get_tree().create_timer(2.0).timeout
+			if kill_label: kill_label.text = "Kills: " + str(kill_count)
+	else:
+		if kill_label:
+			kill_label.text = "Kills: " + str(kill_count)
+			
+	print("Enemy killed! Total kills: ", kill_count)
 		
 func die() -> void:
 	if is_dead:

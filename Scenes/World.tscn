@@ -85,8 +85,6 @@ script = null
 [node name="StaticBody3D" type="StaticBody3D" parent="Map/EnemySpawner" unique_id=783092826]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.0348463, 0)
 script = ExtResource("4_uo7di")
-spawn_interval = 5.0
-max_enemies = 2
 spawn_radius = 7.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Map/EnemySpawner/StaticBody3D" unique_id=846995855]

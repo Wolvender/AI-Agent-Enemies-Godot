@@ -51,11 +51,17 @@ var was_on_floor := false
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	animation_player.animation_finished.connect(_on_animation_finished)
-	
+
 	current_health = max_health
 	is_dead = false
-	
+
+	# Apply Global Settings
+	if camera:
+		camera.fov = GlobalSettings.fov
+	sensitivity = GlobalSettings.sensitivity
+
 	sword_area.body_entered.connect(_on_sword_hit)
+
 	sword_area.monitoring = false
 	
 	# Setup health bar

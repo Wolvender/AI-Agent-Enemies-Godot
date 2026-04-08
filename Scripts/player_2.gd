@@ -25,6 +25,7 @@ signal kill_count_changed(new_count: int)
 @export var attack_cooldown := 0.6
 
 @onready var camera_mount: Node3D = $CameraMount
+@onready var camera: Camera3D = $CameraMount/Camera3D
 @onready var animation_player: AnimationPlayer = $Visual/Player/AnimationPlayer
 @onready var sword_area: Area3D = $Visual/Player/Armature/Skeleton3D/PhysicalBone3D/sword_psx/Area3D
 
@@ -80,6 +81,19 @@ func _ready() -> void:
 		wave_label.text = "Wave: 1"
 		print("✅ Wave label found and ready!")
 
+func heal(amount: float) -> void:
+	if is_dead:
+		return
+	
+	current_health = clamp(current_health + amount, 0, max_health)   # ← better than min()
+	
+	if health_bar:
+		health_bar.value = current_health
+		print("Healed! HP now: ", current_health, "/", max_health)
+	else:
+		print("❌ Health bar reference is missing!")
+	
+	
 func update_wave(wave: int) -> void:
 	if wave_label:
 		wave_label.text = "Wave: " + str(wave)
@@ -110,6 +124,29 @@ func _input(event: InputEvent) -> void:
 		else:
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
+# ====================== JUICE SYSTEM ======================
+var shake_strength := 0.0
+var shake_decay := 5.0
+
+func _process(delta: float) -> void:
+	if shake_strength > 0:
+		shake_strength = lerp(shake_strength, 0.0, shake_decay * delta)
+		camera_mount.transform.origin = Vector3(
+			randf_range(-shake_strength, shake_strength),
+			randf_range(-shake_strength, shake_strength),
+			0
+		)
+	elif camera_mount.transform.origin != Vector3.ZERO:
+		camera_mount.transform.origin = Vector3.ZERO
+
+func apply_shake(strength: float) -> void:
+	shake_strength = strength
+
+func hit_stop(time_scale: float, duration: float) -> void:
+	Engine.time_scale = time_scale
+	await get_tree().create_timer(duration * time_scale).timeout
+	Engine.time_scale = 1.0
+
 # ====================== ATTACK SYSTEM ======================
 func _on_sword_hit(body: Node) -> void:
 	if body == self or body in _hit_bodies:
@@ -119,6 +156,10 @@ func _on_sword_hit(body: Node) -> void:
 		_hit_bodies.append(body)
 		print("Attempting to deal ", attack_damage, " damage to ", target.name)
 		target.take_damage(attack_damage)
+		
+		# === JUICE ===
+		apply_shake(0.05)
+		hit_stop(0.05, 0.1)
 	else:
 		print("Hit something that cannot take damage: ", body.name)
 
@@ -141,6 +182,9 @@ func take_damage(amount: float) -> void:
 	if is_dead:
 		return
 	current_health = clamp(current_health - amount, 0, max_health)
+	
+	# === JUICE ===
+	apply_shake(0.4)
 	
 	if health_bar:
 		health_bar.value = current_health

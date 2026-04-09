@@ -15,7 +15,6 @@ var current_health: float = 100.0
 var is_dead: bool = false
 var kill_count: int = 0
 
-# Signal so your main scene / game manager can react
 signal player_died
 signal kill_count_changed(new_count: int)
 
@@ -48,6 +47,15 @@ var jump_buffer := 0.0
 const JUMP_BUFFER_DURATION := 0.15
 var was_on_floor := false
 
+# ---------------------------------------------------------------------------
+# Health bar visual vars
+# ---------------------------------------------------------------------------
+var _ghost_tween  : Tween
+var _pulse_tween  : Tween
+var _shake_origin : Vector2
+
+
+# ====================== READY ======================
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	animation_player.animation_finished.connect(_on_animation_finished)
@@ -55,27 +63,14 @@ func _ready() -> void:
 	current_health = max_health
 	is_dead = false
 
-	# Apply Global Settings
 	if camera:
 		camera.fov = GlobalSettings.fov
 	sensitivity = GlobalSettings.sensitivity
 
 	sword_area.body_entered.connect(_on_sword_hit)
-
 	sword_area.monitoring = false
-	
-	# Setup health bar
-	if health_bar:
-		health_bar.max_value = max_health
-		health_bar.value = current_health
 
-	# === PLAYER HEALTH BAR SETUP WITH DEBUG ===
-	if health_bar:
-		health_bar.max_value = max_health
-		health_bar.value = current_health
-		print("✅ Player health bar found and ready!")
-	else:
-		print("❌ ERROR: Player health bar NOT FOUND! Check node path $CanvasLayer/HealthBar")
+	_setup_health_bar()
 
 	if kill_label:
 		kill_label.text = "Kills: " + str(kill_count)
@@ -87,48 +82,120 @@ func _ready() -> void:
 		wave_label.text = "Wave: 1"
 		print("✅ Wave label found and ready!")
 
+
+# ---------------------------------------------------------------------------
+# Health bar setup — call once in _ready
+# ---------------------------------------------------------------------------
+func _setup_health_bar() -> void:
+	var ghost := get_node_or_null("SubViewport/GhostBar")
+	if health_bar:
+		health_bar.max_value = max_health
+		health_bar.value     = current_health
+		health_bar.modulate  = Color.GREEN
+		_shake_origin        = health_bar.position
+		print("✅ Player health bar found and ready!")
+	else:
+		print("❌ ERROR: Player health bar NOT FOUND!")
+	if ghost:
+		ghost.max_value = max_health
+		ghost.value     = current_health
+		ghost.modulate  = Color(1.0, 0.85, 0.1)  # yellow ghost bar
+
+
+# ---------------------------------------------------------------------------
+# Central health bar updater — call from take_damage and heal
+# ---------------------------------------------------------------------------
+func _update_health_bar(old_value: float, new_value: float) -> void:
+	if not health_bar:
+		return
+
+	var ghost := get_node_or_null("SubViewport/GhostBar")
+	var ratio := new_value / max_health
+	health_bar.value = new_value
+
+	# ── 1. Color shifts green → yellow → red ────────────────────────────
+	if ratio > 0.5:
+		health_bar.modulate = Color.GREEN.lerp(Color.YELLOW, 1.0 - (ratio - 0.5) * 2.0)
+	else:
+		health_bar.modulate = Color.YELLOW.lerp(Color.RED, 1.0 - ratio * 2.0)
+
+	if new_value < old_value:
+		# ── 2. Ghost bar drains slowly behind main bar ───────────────────
+		if ghost:
+			if _ghost_tween:
+				_ghost_tween.kill()
+			_ghost_tween = create_tween()
+			_ghost_tween.tween_interval(0.25)
+			_ghost_tween.tween_property(ghost, "value", new_value, 0.55)\
+				.set_ease(Tween.EASE_OUT)
+
+		# ── 3. Flash white then back to health color ─────────────────────
+		var flash_color : Color = health_bar.modulate
+		var flash := create_tween()
+		flash.tween_property(health_bar, "modulate", Color.WHITE, 0.04)
+		flash.tween_property(health_bar, "modulate", flash_color, 0.18)
+
+		# ── 4. Shake the bar ─────────────────────────────────────────────
+		var shake := create_tween()
+		for i in 5:
+			shake.tween_property(health_bar, "position",
+				_shake_origin + Vector2(randf_range(-5, 5), randf_range(-2, 2)), 0.03)
+		shake.tween_property(health_bar, "position", _shake_origin, 0.03)
+
+	# ── 5. Pulse when critically low ─────────────────────────────────────
+	if ratio < 0.25:
+		if _pulse_tween == null or not _pulse_tween.is_running():
+			_pulse_tween = create_tween().set_loops()
+			_pulse_tween.tween_property(health_bar, "modulate:a", 0.35, 0.35)
+			_pulse_tween.tween_property(health_bar, "modulate:a", 1.0,  0.35)
+	else:
+		if _pulse_tween:
+			_pulse_tween.kill()
+			_pulse_tween          = null
+			health_bar.modulate.a = 1.0
+
+
+# ====================== HEAL ======================
 func heal(amount: float) -> void:
 	if is_dead:
 		return
-	
-	current_health = clamp(current_health + amount, 0, max_health)   # ← better than min()
-	
-	if health_bar:
-		health_bar.value = current_health
-		print("Healed! HP now: ", current_health, "/", max_health)
-	else:
-		print("❌ Health bar reference is missing!")
-	
-	
+	var old_value : float = current_health
+	current_health = clamp(current_health + amount, 0, max_health)
+	_update_health_bar(old_value, current_health)
+	print("Healed! HP now: ", current_health, "/", max_health)
+
+
 func update_wave(wave: int) -> void:
 	if wave_label:
 		wave_label.text = "Wave: " + str(wave)
 	print("Wave updated to: ", wave)
 
-func _on_animation_finished(anim_name: String) -> void:
 
+func _on_animation_finished(anim_name: String) -> void:
 	if anim_name == "mixamo_com_017":
 		double_jump_anim_playing = false
 	if anim_name == "mixamo_com_010":
 		is_attacking = false
 		animation_player.speed_scale = 1.0
 
+
 # ====================== INPUT ======================
 func _input(event: InputEvent) -> void:
 	if is_dead:
 		return
-		
+
 	if event is InputEventMouseMotion:
 		rotate_y(deg_to_rad(-event.relative.x * sensitivity))
 		if camera_mount:
 			camera_mount.rotate_x(deg_to_rad(-event.relative.y * sensitivity))
 			camera_mount.rotation.x = clamp(camera_mount.rotation.x, deg_to_rad(min_pitch), deg_to_rad(max_pitch))
-	
+
 	if event.is_action_pressed("ui_cancel"):
 		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 		else:
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
 
 # ====================== JUICE SYSTEM ======================
 var shake_strength := 0.0
@@ -153,6 +220,7 @@ func hit_stop(time_scale: float, duration: float) -> void:
 	await get_tree().create_timer(duration * time_scale).timeout
 	Engine.time_scale = 1.0
 
+
 # ====================== ATTACK SYSTEM ======================
 func _on_sword_hit(body: Node) -> void:
 	if body == self or body in _hit_bodies:
@@ -162,8 +230,6 @@ func _on_sword_hit(body: Node) -> void:
 		_hit_bodies.append(body)
 		print("Attempting to deal ", attack_damage, " damage to ", target.name)
 		target.take_damage(attack_damage)
-		
-		# === JUICE ===
 		apply_shake(0.05)
 		hit_stop(0.05, 0.1)
 	else:
@@ -175,7 +241,6 @@ func try_attack() -> void:
 	is_attacking = true
 	attack_timer = attack_cooldown
 	_hit_bodies.clear()
-	# Lunge forward
 	velocity += -global_transform.basis.z * 4.0
 	animation_player.speed_scale = 2.0
 	play_animation("mixamo_com_010")
@@ -183,36 +248,30 @@ func try_attack() -> void:
 	await get_tree().create_timer(0.4).timeout
 	sword_area.monitoring = false
 
+
 # ====================== HEALTH & DEATH ======================
 func take_damage(amount: float) -> void:
 	if is_dead:
 		return
+	var old_value : float = current_health
 	current_health = clamp(current_health - amount, 0, max_health)
-	
-	# === JUICE ===
+
 	apply_shake(0.4)
-	
-	if health_bar:
-		health_bar.value = current_health
-		print("✅ Player health bar UPDATED to ", current_health, "/", max_health)
-	else:
-		print("❌ Player health bar reference is null - bar will not update!")
-	
+	_update_health_bar(old_value, current_health)
+
 	print("Player took ", amount, " damage. Health: ", current_health, "/", max_health)
-	
+
 	if current_health <= 1:
 		die()
 
 func add_kill() -> void:
 	kill_count += 1
 	kill_count_changed.emit(kill_count)
-	
-	# Scaling damage: Every 5 kills, add 10 more attack damage
+
 	if kill_count > 0 and kill_count % 5 == 0:
 		attack_damage += 10.0
 		print("🔥 Damage Up! New attack damage: ", attack_damage)
 		if kill_label:
-			# Temporary visual feedback for damage up
 			var original_text = "Kills: " + str(kill_count)
 			kill_label.text = "DMG UP! " + str(attack_damage)
 			await get_tree().create_timer(2.0).timeout
@@ -220,9 +279,9 @@ func add_kill() -> void:
 	else:
 		if kill_label:
 			kill_label.text = "Kills: " + str(kill_count)
-			
+
 	print("Enemy killed! Total kills: ", kill_count)
-		
+
 func die() -> void:
 	if is_dead:
 		return
@@ -242,7 +301,7 @@ func _physics_process(delta: float) -> void:
 	if is_dead:
 		move_and_slide()
 		return
-	
+
 	if attack_timer > 0.0:
 		attack_timer -= delta
 
@@ -260,7 +319,6 @@ func _physics_process(delta: float) -> void:
 		jump_buffer -= delta
 
 	if not is_on_floor():
-		# Snappier gravity
 		velocity += get_gravity() * delta * 1.4
 	if jump_timer > 0:
 		jump_timer -= delta
@@ -293,17 +351,14 @@ func _physics_process(delta: float) -> void:
 
 	if direction:
 		if not is_attacking:
-			# Smooth acceleration
 			velocity.x = lerp(velocity.x, direction.x * current_speed, 0.25)
 			velocity.z = lerp(velocity.z, direction.z * current_speed, 0.25)
 			var target_rotation = atan2(input_dir.x, input_dir.y)
 			$Visual/Player.rotation.y = lerp_angle($Visual/Player.rotation.y, target_rotation, 15.0 * delta)
 		else:
-			# Snappy stop while attacking
 			velocity.x = move_toward(velocity.x, 0, current_speed * 0.3)
 			velocity.z = move_toward(velocity.z, 0, current_speed * 0.3)
 	else:
-		# Snappy stop
 		velocity.x = move_toward(velocity.x, 0, current_speed * 0.3)
 		velocity.z = move_toward(velocity.z, 0, current_speed * 0.3)
 
@@ -317,6 +372,8 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	update_animations(direction, current_speed)
 
+
+# ====================== ANIMATIONS ======================
 func update_animations(direction: Vector3, current_speed: float) -> void:
 	if is_dead:
 		return
